@@ -1,0 +1,20 @@
+class Program
+{
+	int arr[10];
+	int main()
+	{
+		int i,j,n,temp;
+		for i = 0,10
+		{
+			for j = 0,10
+			{
+				if(arr[j]>arr[j+1])
+				{
+					temp=arr[j];
+					arr[j]=arr[j+1];
+					arr[j+1]=temp;
+				}
+			}
+		}
+	}
+}

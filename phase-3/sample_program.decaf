@@ -1,0 +1,16 @@
+	
+
+    class Program{
+            int hello;
+            int yahoo;
+	    int arr[10];
+	    int fun( int a )
+	    {
+		    a=a+1;
+		    hello=hello+1;
+		    return a;
+	    }
+	    int arr[10];
+    }
+
+

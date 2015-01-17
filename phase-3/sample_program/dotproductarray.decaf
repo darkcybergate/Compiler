@@ -1,0 +1,12 @@
+class Program
+{	
+	int arr[100000],brr[100000],crr[100000];
+	int main()
+	{
+		int i;
+		for i=1,10000
+		{
+			crr[i]=arr[i]*brr[i];
+		}
+	}
+}

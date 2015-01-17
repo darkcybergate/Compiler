@@ -1,0 +1,30 @@
+class Program
+{
+	int arr[10];
+	int main()
+	{
+		int i,j,low,high,mid,val;
+		low=0;
+		high=10;
+		for i=1,10
+		{
+			mid = ( low + high ) / 2;
+		//	if( arr[mid] == val)
+		//	{
+		//		break;
+		//	}
+			if( val > arr[mid])
+			{
+				low = mid + 1;
+			}
+			if( val < arr[mid])
+			{
+				high = mid - 1;
+			}
+			if(low > high)
+			{
+				break;
+			}
+		}
+	}
+}

@@ -1,0 +1,62 @@
+class Program {
+int iter,arr[10];
+boolean bool;
+
+void func(){}
+int newfunc(int x, boolean b)
+{
+
+       for iter = a - b + c + (a*v)*(s%r)-(d/8*6/5), a - b + c + (a*v)*(s%r)-(d/8*6/5) { x=1- a - b + c + (a*v)*(s%r)-(d/8*6/5); }
+
+  int iter1,iter2;
+  boolean bool;
+  temp=0x1111;  
+  ans = (a + z)*c;
+  return ans;
+  str = "HELLO WORLD";
+  c='c';
+  return c;
+  
+ 
+  array[iter] = 1123;
+
+  func();
+  newfunc(10, aaa);
+ 
+ for idd = 'c', (!idd - d+e*f) { a=1; break;}
+
+  if(true && a-x>0 || false && x<=24)
+	{
+	     int temp;
+	    z = z + 1;
+	    if(x&&z)
+	    {
+		temp= temp + 1;
+		continue;
+	    }
+	}
+
+	else
+	{
+	    int temp;
+	    x = x +1;
+	    if(x||y)
+	    {
+		temp = temp - 1;
+		
+	    }
+	   
+	}
+callout("hello World", b%a+l*c-e, "dasdw");
+	x -= 1;
+	x += 1;
+
+        nofunc(ss*1, 88, kkk, ppp);
+        extrafunc(kk);
+	char  = 's';
+        callout("", b+a/l*c%e, "d", ranf*renas);
+	
+
+
+}
+}

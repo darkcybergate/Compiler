@@ -1,0 +1,13 @@
+Abhishek Bhat - 201201045
+Bhumik Shah - 201201055
+
+
+1) Run command $ make clean
+ (This will remove some files previously created during previous compilation)
+2) Then run $ make
+  (This Creates executable named astbuilder )
+
+3) For testing purpose you can run any decaf file way to run is
+  $ ./astbuilder <filename>
+
+  In the folder we have test file sample_program.decaf so to run it use following command

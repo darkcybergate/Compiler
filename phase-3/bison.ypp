@@ -1,0 +1,429 @@
+%{
+#include<cstdio>
+#include <iostream>
+#include <stdarg.h>
+#include <llvm/IR/Module.h>
+#include <llvm/IR/Function.h>
+#include <llvm/IR/Type.h>
+#include <llvm/IR/DerivedTypes.h>
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/CallingConv.h>
+#include <llvm/Bitcode/ReaderWriter.h>
+#include <llvm/Analysis/Verifier.h>
+#include <llvm/Assembly/PrintModulePass.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/ExecutionEngine/JIT.h>
+#include <llvm/ADT/APInt.h>
+#include <llvm/ADT/ArrayRef.h>
+#include <llvm/Support/raw_ostream.h>
+#include <llvm/ExecutionEngine/ExecutionEngine.h>
+#include <llvm/IR/TypeBuilder.h>
+
+using namespace llvm;
+#include "Parent.hh"
+
+using namespace std;
+
+int yylex(); 
+int yyerror(const char *p) { cerr << "Error!" << endl; }
+extern "C" FILE *yyin;
+extern Value *ErrorV(const char *Str);
+
+int line_num = 1;
+int err_count = 0;
+extern const char *yytext;
+char *filename;
+
+int type;
+Var_type *t;
+int dim;
+ClassChild *c;
+bool is_func_enter = false;
+char errmsg[2056];
+MethodChild *method;
+Var_type *p;
+IdExpr *l;
+AstNode *En;
+FieldChild *Fe;
+StringConstant *Sc;
+list<AstNode*>* En_;
+
+extern AstNode *program_pointer; 
+
+%}
+
+%locations
+%error-verbose
+
+%union {
+	int ival;
+	float fval;
+	char *sval;
+	char *cmtval;
+	char *errval;
+	char *strval;
+}
+%union
+{
+	char* string_val;
+	int int_val;
+	float float_val;
+	char *char_val;
+	bool bool_val;
+	bool bool_arr_2[2];
+	AssignOperator  a_op;
+	Var_type * type;
+	AstNode* par;
+	list<AstNode*>* par_list;
+	list<FieldChild*>* field_list;
+	Expr *expr;
+	list<Expr*> *expr_list;
+	Stmt *stmt;
+	list<Stmt*> *stmt_list;
+	VariableChild* var_par;
+	list<MethodChild*>* ME;
+	struct mh
+	{
+		bool bool_arr_2[2];
+		char *name;
+		Var_type *type;
+	} mhead;
+	struct vinfo
+	{
+		char *name;
+		int dim;
+	}varinfo;
+}
+%token INT_CONST
+%token STRING_CONST
+%token COMMENT
+%token SYN_ERR
+%token CHAR_CONST
+%token ID
+
+
+
+%token INT
+%token IF
+%token ELSE
+%token FOR
+%token RETURN
+%token BREAK
+%token CONTINUE
+%token NULL_TOKEN
+%token TRUE
+%token FALSE
+%token HEX_CONST
+
+%token CLASS
+%token CALLOUT
+%token OPEN_BRACE
+%token CLOSE_BRACE
+%token SEMI_COLON
+%token BOOLEAN
+%token COMMA
+%token DOT
+%token OPEN_PARANTHESIS
+%token CLOSE_PARANTHESIS
+%token OPEN_SQR_BRACKET
+%token CLOSE_SQR_BRACKET
+%token VOID
+%token TOK_MODULUS
+%token TOK_PLUS
+%token TOK_PLUS_PLUS
+%token TOK_MINUS
+%token TOK_MINUS_MINUS
+%token TOK_MULTIPLY
+%token TOK_DIVIDE
+%token TOK_NOT_EQUAL
+%token TOK_NOT
+%token TOK_OR
+%token TOK_AND
+%token TOK_EQUAL_EQUAL
+%token TOK_EQUAL
+%token TOK_PLUS_EQUAL
+%token TOK_MINUS_EQUAL
+%token TOK_LESS_EQUAL
+%token TOK_LESS
+%token TOK_GREATER_EQUAL
+%token TOK_GREATER
+%token EOF_TOKEN
+%token PROGRAM
+
+%right TOK_EQUAL
+%left TOK_OR
+%left TOK_AND
+%left TOK_EQUAL_EQUAL TOK_NOT_EQUAL
+%nonassoc TOK_LESS TOK_GREATER TOK_LESS_EQUAL TOK_GREATER_EQUAL
+%left TOK_PLUS TOK_MINUS
+%left TOK_MULTIPLY TOK_DIVIDE TOK_MODULUS
+%right TOK_NOT TOK_UMINUS TOK_UPLUS
+
+%left COMMA TOK_PLUS_EQUAL TOK_MINUS_EQUAL
+%type <string_val> ID
+%type <string_val> HEX_CONST
+%type <ival> INT_CONST
+%type <strval> STRING_CONST
+%type<cmtval> COMMENT
+%type <errval> SYN_ERR
+%type <char_val> CHAR_CONST
+%type <par>program
+%type <par>ClassDeclarations
+%type <string_val> PROGRAM
+%type <par_list>CLASS_DECLARATION
+%type <par_list>CLASS_DECL
+%type <stmt>FIELD_DECLARATION 
+%type<stmt>GLOBAL_FIELD_DECLARATION
+%type <par_list>METHOD_DECLARATION
+%type <par_list>VARIABLES
+%type <par> VARIABLE
+%type <int_val> DIMENSION
+%type <int_val> INT_DIMENSION
+%type <field_list>formals_list
+%type <field_list>formals
+%type <stmt> BLOCK
+%type <stmt_list>STATEMENTS
+%type <stmt>STATEMENT
+%type <type> TYPE
+%type <stmt>ELSE_STMT
+%type <stmt>ELSE_BLOCK
+%type <expr> Return_Expression
+%type <expr> METHOD_CALL
+%type <expr_list>List_Arguments
+%type <expr_list>COMMA_EXPR
+%type <expr_list>Call_Func_OutARGS
+%type <expr_list>Call_Func_OutLIST
+%type <expr>CALLOUT_ARG
+%type <expr_list>Call_Func_Out
+%type <expr>METHOD_NAME
+%type <expr>LOCATION
+%type <expr>EXPR
+%type <expr>LITERAL
+%type <expr>BOOL
+%type <bool_val> TRUE
+%type <bool_val> FALSE
+%type <a_op> Operator_Assign
+
+%%
+program:  ClassDeclarations 
+{
+		AstNode *temp1=$1;
+       program_pointer = temp1;
+};
+
+ClassDeclarations :
+		  CLASS PROGRAM OPEN_BRACE
+	{
+		c=new ClassChild($2,NULL);
+	} 
+	CLASS_DECLARATION
+	CLOSE_BRACE
+	{
+		if (c)
+			{
+				c->set_class_members($5);
+				$$ = c;
+			}
+			else
+			{
+				$$ = NULL;
+			}
+	} 
+		 ;
+
+
+CLASS_DECLARATION		: CLASS_DECLARATION CLASS_DECL
+		   {
+								$$ = $1;
+								$$->merge(*$2);
+							}
+						| CLASS_DECL
+							{
+								$$ = new list <AstNode *>();
+								$$->merge(*$1);
+							}
+
+
+CLASS_DECL              : GLOBAL_FIELD_DECLARATION  { $$ = new list <AstNode *>();$$->push_back($1); }
+			| METHOD_DECLARATION  { $$=$1; }
+						;
+
+GLOBAL_FIELD_DECLARATION		:  TYPE  VARIABLES SEMI_COLON {$$=new GlobalDeclStmt($1,$2);} ;
+
+
+
+METHOD_DECLARATION: TYPE ID {method= new MethodChild($2,$1,NULL,NULL);} OPEN_PARANTHESIS formals_list  CLOSE_PARANTHESIS {method->set_formal_params($5);} BLOCK {method->set_method_body($8);$$=new list<AstNode *>();$$->push_back(method);}
+		  | VOID ID {p=new Void_Type();method= new MethodChild($2,p,NULL,NULL);} OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS {method->set_formal_params($5);} BLOCK {method->set_method_body($8);$$=new list<AstNode *>();$$->push_back(method);}
+		;
+
+
+formals_list : {$$=new list<FieldChild *>();}
+	     | formals {$$=$1;}
+		;
+
+
+
+formals	: TYPE ID {$$=new list<FieldChild *>();Fe=new FieldChild($2,$1,0);$$->push_back(Fe);}  
+	| TYPE ID COMMA formals {$$=$4;Fe=new FieldChild($2,$1,0);;$$->push_back(Fe);}
+	;
+
+
+
+FIELD_DECLARATION		:  TYPE  VARIABLES SEMI_COLON {$$=new DeclStmt($1,$2);} ;
+
+
+
+
+VARIABLES: 	VARIABLE {$$=new list<AstNode *>();$$->push_back($1);}
+	 | VARIABLES COMMA VARIABLE { $$=$1 ; $$->push_back($3);}
+		;
+
+
+VARIABLE: ID DIMENSION {$$= new VariableChild($1,t,$2);}
+	;
+
+
+DIMENSION  : {$$=0;}
+     | INT_DIMENSION {$$=$1;}
+	 ;
+
+
+INT_DIMENSION: OPEN_SQR_BRACKET INT_CONST CLOSE_SQR_BRACKET {$$ = $2;}
+       ;	
+
+
+
+BLOCK: OPEN_BRACE STATEMENTS CLOSE_BRACE {$$=new BlockStmt($2);}
+     ;
+
+
+
+STATEMENTS: { $$ = new list<Stmt *>(); } 
+	  | STATEMENTS STATEMENT { $$ = $1; $$->push_back($2); }
+		;
+
+
+STATEMENT: LOCATION Operator_Assign EXPR SEMI_COLON {$$=new LocationStmt($2,$1,$3);}
+	 | METHOD_CALL SEMI_COLON {$$=new ExprStmt($1);}
+		| IF OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS BLOCK ELSE_STMT {$$=new IfStmt($3,$5,$6);}
+		| FOR ID TOK_EQUAL EXPR COMMA EXPR BLOCK {Sc=new StringConstant($2);$$=new ForStmt(Sc,$4,$6,$7);}
+		| RETURN Return_Expression SEMI_COLON {$$= new ReturnStmt($2);}
+		| BREAK SEMI_COLON {$$=new BreakStmt();}
+		| CONTINUE SEMI_COLON {$$=new ContinueStmt();}
+		| BLOCK {$$=$1;}
+		| FIELD_DECLARATION {$$=$1;}
+		;		
+
+
+TYPE: INT {$$=new Integer_Type(); t=$$;}
+    | BOOLEAN {$$= new Bool_Type(); t=$$;}
+	;
+
+
+
+ELSE_STMT: {$$=0;}
+	| ELSE_BLOCK {$$=$1;}
+	;
+
+
+ELSE_BLOCK: ELSE BLOCK {$$=$2;}
+	  ;
+
+
+Return_Expression: {$$=new NullExpr();}
+     | EXPR {$$=$1;}
+	;
+
+
+Operator_Assign : TOK_EQUAL {$$=EQUAL;}
+	  | TOK_PLUS_EQUAL {$$=PLUS_EQUAL;}
+		| TOK_MINUS_EQUAL {$$=MINUS_EQUAL;}
+		;
+
+
+METHOD_CALL: METHOD_NAME OPEN_PARANTHESIS List_Arguments CLOSE_PARANTHESIS {$$=new MethodInvocation($1,$3);}
+	   | CALLOUT OPEN_PARANTHESIS STRING_CONST Call_Func_OutARGS CLOSE_PARANTHESIS {$$=new CallOutInvocation($3,$4);}
+		;
+
+
+List_Arguments: {$$= new list<Expr *>();}
+	      | COMMA_EXPR {$$=$1;}
+		;
+
+
+
+COMMA_EXPR:  EXPR {$$=new list<Expr *>();$$->push_back($1);} 
+	   | COMMA_EXPR COMMA EXPR {$$=$1;$$->push_back($3);}
+		;
+
+
+
+EXPR: LOCATION {$$=$1;}
+    | METHOD_CALL {$$=$1;}
+	| LITERAL {$$=$1;}
+	| EXPR TOK_PLUS EXPR  { $$ = new BinaryExpr(ADD,$1,$3); }
+	| EXPR TOK_MINUS EXPR  { $$ = new BinaryExpr(SUB,$1,$3); }
+	| EXPR TOK_MULTIPLY EXPR  { $$ = new BinaryExpr(MUL,$1,$3); }
+	| EXPR TOK_DIVIDE EXPR  { $$ = new BinaryExpr(DIV,$1,$3); }
+	| EXPR TOK_MODULUS EXPR  { $$ = new BinaryExpr(MOD,$1,$3); }
+	| EXPR TOK_GREATER EXPR  { $$ = new BinaryExpr(GT,$1,$3); }
+	| EXPR TOK_GREATER_EQUAL EXPR  { $$ = new BinaryExpr(GEQ,$1,$3); }
+	| EXPR TOK_LESS EXPR   { $$ = new BinaryExpr(LT,$1,$3); }
+	| EXPR TOK_LESS_EQUAL EXPR  { $$ = new BinaryExpr(LEQ,$1,$3); }
+	| EXPR TOK_EQUAL_EQUAL EXPR  { $$ = new BinaryExpr(EQ,$1,$3); }
+	| EXPR TOK_NOT_EQUAL EXPR  { $$ = new BinaryExpr(NEQ,$1,$3); }
+	| EXPR TOK_AND EXPR  { $$ = new BinaryExpr(AND,$1,$3); }
+	| EXPR TOK_OR EXPR  { $$ = new BinaryExpr(OR,$1,$3); }
+	| TOK_MINUS EXPR  { $$ = new UnaryExpr(UMINUS,$2); }
+	| TOK_NOT EXPR   { $$ = new UnaryExpr(NEG,$2); }
+	| OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS {$$= new ImpExpr($2);} 
+	;
+
+
+
+Call_Func_OutARGS: {$$=new list<Expr *>();}
+	     | Call_Func_OutLIST {$$=$1;}
+		;
+
+
+Call_Func_OutLIST: COMMA Call_Func_Out {$$=$2;}
+	     ;
+
+
+Call_Func_Out: CALLOUT_ARG COMMA Call_Func_Out {$$=$3;$$->push_front($1);}
+	| CALLOUT_ARG {$$=new list<Expr *>();$$->push_back($1);}
+		;
+
+
+CALLOUT_ARG: EXPR {$$ = $1;}
+	   ;
+
+
+METHOD_NAME: ID {$$=new StringConstant($1);}
+	   ;
+
+
+LOCATION: ID {$$=new IdExpr($1);}
+	| ID OPEN_SQR_BRACKET EXPR CLOSE_SQR_BRACKET {$$=new LocationExpr($1,$3);} 
+	;
+
+
+
+LITERAL: INT_CONST {$$=new IntegerConstant($1);}
+       | CHAR_CONST {$$=new CharConstant($1);}
+	| BOOL  {$$=$1;}
+	| STRING_CONST {$$=new StringConstant($1);}
+	| HEX_CONST {$$=new HexConstant($1);}
+	;
+
+BOOL	: TRUE {$$=new BooleanConstant($1);}
+     | FALSE {$$=new BooleanConstant($1);}
+
+
+
+
+%%
+

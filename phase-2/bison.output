@@ -1,0 +1,2510 @@
+Terminals unused in grammar
+
+   COMMENT
+   SYN_ERR
+   NULL_TOKEN
+   DOT
+   TOK_PLUS_PLUS
+   TOK_MINUS_MINUS
+   EOF_TOKEN
+   TOK_UMINUS
+   TOK_UPLUS
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: ClassDeclarations
+
+    2 $@1: %empty
+
+    3 ClassDeclarations: CLASS PROGRAM OPEN_BRACE $@1 CLASS_DECLARATION CLOSE_BRACE
+
+    4 CLASS_DECLARATION: CLASS_DECLARATION CLASS_DECL
+    5                  | CLASS_DECL
+
+    6 CLASS_DECL: FIELD_DECLARATION
+    7           | METHOD_DECLARATION
+
+    8 $@2: %empty
+
+    9 $@3: %empty
+
+   10 METHOD_DECLARATION: TYPE ID $@2 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@3 BLOCK
+
+   11 $@4: %empty
+
+   12 $@5: %empty
+
+   13 METHOD_DECLARATION: VOID ID $@4 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@5 BLOCK
+
+   14 formals_list: %empty
+   15             | formals
+
+   16 formals: TYPE ID
+   17        | TYPE ID COMMA formals
+
+   18 FIELD_DECLARATION: TYPE VARIABLES SEMI_COLON
+
+   19 VARIABLES: VARIABLE
+   20          | VARIABLES COMMA VARIABLE
+
+   21 VARIABLE: ID DIMENSION
+
+   22 DIMENSION: %empty
+   23          | INT_DIMENSION
+
+   24 INT_DIMENSION: OPEN_SQR_BRACKET INT_CONST CLOSE_SQR_BRACKET
+
+   25 BLOCK: OPEN_BRACE STATEMENTS CLOSE_BRACE
+
+   26 STATEMENTS: %empty
+   27           | STATEMENTS STATEMENT
+
+   28 STATEMENT: LOCATION Operator_Assign EXPR SEMI_COLON
+   29          | METHOD_CALL SEMI_COLON
+   30          | IF OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS BLOCK ELSE_STMT
+   31          | FOR ID TOK_EQUAL EXPR COMMA EXPR BLOCK
+   32          | RETURN Return_Expression SEMI_COLON
+   33          | BREAK SEMI_COLON
+   34          | CONTINUE SEMI_COLON
+   35          | BLOCK
+   36          | FIELD_DECLARATION
+
+   37 TYPE: INT
+   38     | BOOLEAN
+
+   39 ELSE_STMT: %empty
+   40          | ELSE_BLOCK
+
+   41 ELSE_BLOCK: ELSE BLOCK
+
+   42 Return_Expression: %empty
+   43                  | EXPR
+
+   44 Operator_Assign: TOK_EQUAL
+   45                | TOK_PLUS_EQUAL
+   46                | TOK_MINUS_EQUAL
+
+   47 METHOD_CALL: METHOD_NAME OPEN_PARANTHESIS List_Arguments CLOSE_PARANTHESIS
+   48            | CALLOUT OPEN_PARANTHESIS STRING_CONST Call_Func_OutARGS CLOSE_PARANTHESIS
+
+   49 List_Arguments: %empty
+   50               | COMMA_EXPR
+
+   51 COMMA_EXPR: EXPR
+   52           | COMMA_EXPR COMMA EXPR
+
+   53 EXPR: LOCATION
+   54     | METHOD_CALL
+   55     | LITERAL
+   56     | EXPR TOK_PLUS EXPR
+   57     | EXPR TOK_MINUS EXPR
+   58     | EXPR TOK_MULTIPLY EXPR
+   59     | EXPR TOK_DIVIDE EXPR
+   60     | EXPR TOK_MODULUS EXPR
+   61     | EXPR TOK_GREATER EXPR
+   62     | EXPR TOK_GREATER_EQUAL EXPR
+   63     | EXPR TOK_LESS EXPR
+   64     | EXPR TOK_LESS_EQUAL EXPR
+   65     | EXPR TOK_EQUAL_EQUAL EXPR
+   66     | EXPR TOK_NOT_EQUAL EXPR
+   67     | EXPR TOK_AND EXPR
+   68     | EXPR TOK_OR EXPR
+   69     | TOK_MINUS EXPR
+   70     | TOK_NOT EXPR
+   71     | OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS
+
+   72 Call_Func_OutARGS: %empty
+   73                  | Call_Func_OutLIST
+
+   74 Call_Func_OutLIST: COMMA Call_Func_Out
+
+   75 Call_Func_Out: CALLOUT_ARG COMMA Call_Func_Out
+   76              | CALLOUT_ARG
+
+   77 CALLOUT_ARG: EXPR
+
+   78 METHOD_NAME: ID
+
+   79 LOCATION: ID
+   80         | ID OPEN_SQR_BRACKET EXPR CLOSE_SQR_BRACKET
+
+   81 LITERAL: INT_CONST
+   82        | CHAR_CONST
+   83        | BOOL
+   84        | STRING_CONST
+   85        | HEX_CONST
+
+   86 BOOL: TRUE
+   87     | FALSE
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT_CONST (258) 24 81
+STRING_CONST (259) 48 84
+COMMENT (260)
+SYN_ERR (261)
+CHAR_CONST (262) 82
+ID (263) 10 13 16 17 21 31 78 79 80
+INT (264) 37
+IF (265) 30
+ELSE (266) 41
+FOR (267) 31
+RETURN (268) 32
+BREAK (269) 33
+CONTINUE (270) 34
+NULL_TOKEN (271)
+TRUE (272) 86
+FALSE (273) 87
+HEX_CONST (274) 85
+CLASS (275) 3
+CALLOUT (276) 48
+OPEN_BRACE (277) 3 25
+CLOSE_BRACE (278) 3 25
+SEMI_COLON (279) 18 28 29 32 33 34
+BOOLEAN (280) 38
+COMMA (281) 17 20 31 52 74 75
+DOT (282)
+OPEN_PARANTHESIS (283) 10 13 30 47 48 71
+CLOSE_PARANTHESIS (284) 10 13 30 47 48 71
+OPEN_SQR_BRACKET (285) 24 80
+CLOSE_SQR_BRACKET (286) 24 80
+VOID (287) 13
+TOK_MODULUS (288) 60
+TOK_PLUS (289) 56
+TOK_PLUS_PLUS (290)
+TOK_MINUS (291) 57 69
+TOK_MINUS_MINUS (292)
+TOK_MULTIPLY (293) 58
+TOK_DIVIDE (294) 59
+TOK_NOT_EQUAL (295) 66
+TOK_NOT (296) 70
+TOK_OR (297) 68
+TOK_AND (298) 67
+TOK_EQUAL_EQUAL (299) 65
+TOK_EQUAL (300) 31 44
+TOK_PLUS_EQUAL (301) 45
+TOK_MINUS_EQUAL (302) 46
+TOK_LESS_EQUAL (303) 64
+TOK_LESS (304) 63
+TOK_GREATER_EQUAL (305) 62
+TOK_GREATER (306) 61
+EOF_TOKEN (307)
+PROGRAM (308) 3
+TOK_UMINUS (309)
+TOK_UPLUS (310)
+
+
+Nonterminals, with rules where they appear
+
+$accept (56)
+    on left: 0
+program (57)
+    on left: 1, on right: 0
+ClassDeclarations (58)
+    on left: 3, on right: 1
+$@1 (59)
+    on left: 2, on right: 3
+CLASS_DECLARATION (60)
+    on left: 4 5, on right: 3 4
+CLASS_DECL (61)
+    on left: 6 7, on right: 4 5
+METHOD_DECLARATION (62)
+    on left: 10 13, on right: 7
+$@2 (63)
+    on left: 8, on right: 10
+$@3 (64)
+    on left: 9, on right: 10
+$@4 (65)
+    on left: 11, on right: 13
+$@5 (66)
+    on left: 12, on right: 13
+formals_list (67)
+    on left: 14 15, on right: 10 13
+formals (68)
+    on left: 16 17, on right: 15 17
+FIELD_DECLARATION (69)
+    on left: 18, on right: 6 36
+VARIABLES (70)
+    on left: 19 20, on right: 18 20
+VARIABLE (71)
+    on left: 21, on right: 19 20
+DIMENSION (72)
+    on left: 22 23, on right: 21
+INT_DIMENSION (73)
+    on left: 24, on right: 23
+BLOCK (74)
+    on left: 25, on right: 10 13 30 31 35 41
+STATEMENTS (75)
+    on left: 26 27, on right: 25 27
+STATEMENT (76)
+    on left: 28 29 30 31 32 33 34 35 36, on right: 27
+TYPE (77)
+    on left: 37 38, on right: 10 16 17 18
+ELSE_STMT (78)
+    on left: 39 40, on right: 30
+ELSE_BLOCK (79)
+    on left: 41, on right: 40
+Return_Expression (80)
+    on left: 42 43, on right: 32
+Operator_Assign (81)
+    on left: 44 45 46, on right: 28
+METHOD_CALL (82)
+    on left: 47 48, on right: 29 54
+List_Arguments (83)
+    on left: 49 50, on right: 47
+COMMA_EXPR (84)
+    on left: 51 52, on right: 50 52
+EXPR (85)
+    on left: 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70
+    71, on right: 28 30 31 43 51 52 56 57 58 59 60 61 62 63 64 65 66
+    67 68 69 70 71 77 80
+Call_Func_OutARGS (86)
+    on left: 72 73, on right: 48
+Call_Func_OutLIST (87)
+    on left: 74, on right: 73
+Call_Func_Out (88)
+    on left: 75 76, on right: 74 75
+CALLOUT_ARG (89)
+    on left: 77, on right: 75 76
+METHOD_NAME (90)
+    on left: 78, on right: 47
+LOCATION (91)
+    on left: 79 80, on right: 28 53
+LITERAL (92)
+    on left: 81 82 83 84 85, on right: 55
+BOOL (93)
+    on left: 86 87, on right: 83
+
+
+State 0
+
+    0 $accept: . program $end
+
+    CLASS  shift, and go to state 1
+
+    program            go to state 2
+    ClassDeclarations  go to state 3
+
+
+State 1
+
+    3 ClassDeclarations: CLASS . PROGRAM OPEN_BRACE $@1 CLASS_DECLARATION CLOSE_BRACE
+
+    PROGRAM  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 program: ClassDeclarations .
+
+    $default  reduce using rule 1 (program)
+
+
+State 4
+
+    3 ClassDeclarations: CLASS PROGRAM . OPEN_BRACE $@1 CLASS_DECLARATION CLOSE_BRACE
+
+    OPEN_BRACE  shift, and go to state 6
+
+
+State 5
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 6
+
+    3 ClassDeclarations: CLASS PROGRAM OPEN_BRACE . $@1 CLASS_DECLARATION CLOSE_BRACE
+
+    $default  reduce using rule 2 ($@1)
+
+    $@1  go to state 7
+
+
+State 7
+
+    3 ClassDeclarations: CLASS PROGRAM OPEN_BRACE $@1 . CLASS_DECLARATION CLOSE_BRACE
+
+    INT      shift, and go to state 8
+    BOOLEAN  shift, and go to state 9
+    VOID     shift, and go to state 10
+
+    CLASS_DECLARATION   go to state 11
+    CLASS_DECL          go to state 12
+    METHOD_DECLARATION  go to state 13
+    FIELD_DECLARATION   go to state 14
+    TYPE                go to state 15
+
+
+State 8
+
+   37 TYPE: INT .
+
+    $default  reduce using rule 37 (TYPE)
+
+
+State 9
+
+   38 TYPE: BOOLEAN .
+
+    $default  reduce using rule 38 (TYPE)
+
+
+State 10
+
+   13 METHOD_DECLARATION: VOID . ID $@4 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@5 BLOCK
+
+    ID  shift, and go to state 16
+
+
+State 11
+
+    3 ClassDeclarations: CLASS PROGRAM OPEN_BRACE $@1 CLASS_DECLARATION . CLOSE_BRACE
+    4 CLASS_DECLARATION: CLASS_DECLARATION . CLASS_DECL
+
+    INT          shift, and go to state 8
+    CLOSE_BRACE  shift, and go to state 17
+    BOOLEAN      shift, and go to state 9
+    VOID         shift, and go to state 10
+
+    CLASS_DECL          go to state 18
+    METHOD_DECLARATION  go to state 13
+    FIELD_DECLARATION   go to state 14
+    TYPE                go to state 15
+
+
+State 12
+
+    5 CLASS_DECLARATION: CLASS_DECL .
+
+    $default  reduce using rule 5 (CLASS_DECLARATION)
+
+
+State 13
+
+    7 CLASS_DECL: METHOD_DECLARATION .
+
+    $default  reduce using rule 7 (CLASS_DECL)
+
+
+State 14
+
+    6 CLASS_DECL: FIELD_DECLARATION .
+
+    $default  reduce using rule 6 (CLASS_DECL)
+
+
+State 15
+
+   10 METHOD_DECLARATION: TYPE . ID $@2 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@3 BLOCK
+   18 FIELD_DECLARATION: TYPE . VARIABLES SEMI_COLON
+
+    ID  shift, and go to state 19
+
+    VARIABLES  go to state 20
+    VARIABLE   go to state 21
+
+
+State 16
+
+   13 METHOD_DECLARATION: VOID ID . $@4 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@5 BLOCK
+
+    $default  reduce using rule 11 ($@4)
+
+    $@4  go to state 22
+
+
+State 17
+
+    3 ClassDeclarations: CLASS PROGRAM OPEN_BRACE $@1 CLASS_DECLARATION CLOSE_BRACE .
+
+    $default  reduce using rule 3 (ClassDeclarations)
+
+
+State 18
+
+    4 CLASS_DECLARATION: CLASS_DECLARATION CLASS_DECL .
+
+    $default  reduce using rule 4 (CLASS_DECLARATION)
+
+
+State 19
+
+   10 METHOD_DECLARATION: TYPE ID . $@2 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@3 BLOCK
+   21 VARIABLE: ID . DIMENSION
+
+    OPEN_SQR_BRACKET  shift, and go to state 23
+
+    OPEN_PARANTHESIS  reduce using rule 8 ($@2)
+    $default          reduce using rule 22 (DIMENSION)
+
+    $@2            go to state 24
+    DIMENSION      go to state 25
+    INT_DIMENSION  go to state 26
+
+
+State 20
+
+   18 FIELD_DECLARATION: TYPE VARIABLES . SEMI_COLON
+   20 VARIABLES: VARIABLES . COMMA VARIABLE
+
+    SEMI_COLON  shift, and go to state 27
+    COMMA       shift, and go to state 28
+
+
+State 21
+
+   19 VARIABLES: VARIABLE .
+
+    $default  reduce using rule 19 (VARIABLES)
+
+
+State 22
+
+   13 METHOD_DECLARATION: VOID ID $@4 . OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@5 BLOCK
+
+    OPEN_PARANTHESIS  shift, and go to state 29
+
+
+State 23
+
+   24 INT_DIMENSION: OPEN_SQR_BRACKET . INT_CONST CLOSE_SQR_BRACKET
+
+    INT_CONST  shift, and go to state 30
+
+
+State 24
+
+   10 METHOD_DECLARATION: TYPE ID $@2 . OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@3 BLOCK
+
+    OPEN_PARANTHESIS  shift, and go to state 31
+
+
+State 25
+
+   21 VARIABLE: ID DIMENSION .
+
+    $default  reduce using rule 21 (VARIABLE)
+
+
+State 26
+
+   23 DIMENSION: INT_DIMENSION .
+
+    $default  reduce using rule 23 (DIMENSION)
+
+
+State 27
+
+   18 FIELD_DECLARATION: TYPE VARIABLES SEMI_COLON .
+
+    $default  reduce using rule 18 (FIELD_DECLARATION)
+
+
+State 28
+
+   20 VARIABLES: VARIABLES COMMA . VARIABLE
+
+    ID  shift, and go to state 32
+
+    VARIABLE  go to state 33
+
+
+State 29
+
+   13 METHOD_DECLARATION: VOID ID $@4 OPEN_PARANTHESIS . formals_list CLOSE_PARANTHESIS $@5 BLOCK
+
+    INT      shift, and go to state 8
+    BOOLEAN  shift, and go to state 9
+
+    $default  reduce using rule 14 (formals_list)
+
+    formals_list  go to state 34
+    formals       go to state 35
+    TYPE          go to state 36
+
+
+State 30
+
+   24 INT_DIMENSION: OPEN_SQR_BRACKET INT_CONST . CLOSE_SQR_BRACKET
+
+    CLOSE_SQR_BRACKET  shift, and go to state 37
+
+
+State 31
+
+   10 METHOD_DECLARATION: TYPE ID $@2 OPEN_PARANTHESIS . formals_list CLOSE_PARANTHESIS $@3 BLOCK
+
+    INT      shift, and go to state 8
+    BOOLEAN  shift, and go to state 9
+
+    $default  reduce using rule 14 (formals_list)
+
+    formals_list  go to state 38
+    formals       go to state 35
+    TYPE          go to state 36
+
+
+State 32
+
+   21 VARIABLE: ID . DIMENSION
+
+    OPEN_SQR_BRACKET  shift, and go to state 23
+
+    $default  reduce using rule 22 (DIMENSION)
+
+    DIMENSION      go to state 25
+    INT_DIMENSION  go to state 26
+
+
+State 33
+
+   20 VARIABLES: VARIABLES COMMA VARIABLE .
+
+    $default  reduce using rule 20 (VARIABLES)
+
+
+State 34
+
+   13 METHOD_DECLARATION: VOID ID $@4 OPEN_PARANTHESIS formals_list . CLOSE_PARANTHESIS $@5 BLOCK
+
+    CLOSE_PARANTHESIS  shift, and go to state 39
+
+
+State 35
+
+   15 formals_list: formals .
+
+    $default  reduce using rule 15 (formals_list)
+
+
+State 36
+
+   16 formals: TYPE . ID
+   17        | TYPE . ID COMMA formals
+
+    ID  shift, and go to state 40
+
+
+State 37
+
+   24 INT_DIMENSION: OPEN_SQR_BRACKET INT_CONST CLOSE_SQR_BRACKET .
+
+    $default  reduce using rule 24 (INT_DIMENSION)
+
+
+State 38
+
+   10 METHOD_DECLARATION: TYPE ID $@2 OPEN_PARANTHESIS formals_list . CLOSE_PARANTHESIS $@3 BLOCK
+
+    CLOSE_PARANTHESIS  shift, and go to state 41
+
+
+State 39
+
+   13 METHOD_DECLARATION: VOID ID $@4 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS . $@5 BLOCK
+
+    $default  reduce using rule 12 ($@5)
+
+    $@5  go to state 42
+
+
+State 40
+
+   16 formals: TYPE ID .
+   17        | TYPE ID . COMMA formals
+
+    COMMA  shift, and go to state 43
+
+    $default  reduce using rule 16 (formals)
+
+
+State 41
+
+   10 METHOD_DECLARATION: TYPE ID $@2 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS . $@3 BLOCK
+
+    $default  reduce using rule 9 ($@3)
+
+    $@3  go to state 44
+
+
+State 42
+
+   13 METHOD_DECLARATION: VOID ID $@4 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@5 . BLOCK
+
+    OPEN_BRACE  shift, and go to state 45
+
+    BLOCK  go to state 46
+
+
+State 43
+
+   17 formals: TYPE ID COMMA . formals
+
+    INT      shift, and go to state 8
+    BOOLEAN  shift, and go to state 9
+
+    formals  go to state 47
+    TYPE     go to state 36
+
+
+State 44
+
+   10 METHOD_DECLARATION: TYPE ID $@2 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@3 . BLOCK
+
+    OPEN_BRACE  shift, and go to state 45
+
+    BLOCK  go to state 48
+
+
+State 45
+
+   25 BLOCK: OPEN_BRACE . STATEMENTS CLOSE_BRACE
+
+    $default  reduce using rule 26 (STATEMENTS)
+
+    STATEMENTS  go to state 49
+
+
+State 46
+
+   13 METHOD_DECLARATION: VOID ID $@4 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@5 BLOCK .
+
+    $default  reduce using rule 13 (METHOD_DECLARATION)
+
+
+State 47
+
+   17 formals: TYPE ID COMMA formals .
+
+    $default  reduce using rule 17 (formals)
+
+
+State 48
+
+   10 METHOD_DECLARATION: TYPE ID $@2 OPEN_PARANTHESIS formals_list CLOSE_PARANTHESIS $@3 BLOCK .
+
+    $default  reduce using rule 10 (METHOD_DECLARATION)
+
+
+State 49
+
+   25 BLOCK: OPEN_BRACE STATEMENTS . CLOSE_BRACE
+   27 STATEMENTS: STATEMENTS . STATEMENT
+
+    ID           shift, and go to state 50
+    INT          shift, and go to state 8
+    IF           shift, and go to state 51
+    FOR          shift, and go to state 52
+    RETURN       shift, and go to state 53
+    BREAK        shift, and go to state 54
+    CONTINUE     shift, and go to state 55
+    CALLOUT      shift, and go to state 56
+    OPEN_BRACE   shift, and go to state 45
+    CLOSE_BRACE  shift, and go to state 57
+    BOOLEAN      shift, and go to state 9
+
+    FIELD_DECLARATION  go to state 58
+    BLOCK              go to state 59
+    STATEMENT          go to state 60
+    TYPE               go to state 61
+    METHOD_CALL        go to state 62
+    METHOD_NAME        go to state 63
+    LOCATION           go to state 64
+
+
+State 50
+
+   78 METHOD_NAME: ID .
+   79 LOCATION: ID .
+   80         | ID . OPEN_SQR_BRACKET EXPR CLOSE_SQR_BRACKET
+
+    OPEN_SQR_BRACKET  shift, and go to state 65
+
+    OPEN_PARANTHESIS  reduce using rule 78 (METHOD_NAME)
+    $default          reduce using rule 79 (LOCATION)
+
+
+State 51
+
+   30 STATEMENT: IF . OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS BLOCK ELSE_STMT
+
+    OPEN_PARANTHESIS  shift, and go to state 66
+
+
+State 52
+
+   31 STATEMENT: FOR . ID TOK_EQUAL EXPR COMMA EXPR BLOCK
+
+    ID  shift, and go to state 67
+
+
+State 53
+
+   32 STATEMENT: RETURN . Return_Expression SEMI_COLON
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    $default  reduce using rule 42 (Return_Expression)
+
+    Return_Expression  go to state 77
+    METHOD_CALL        go to state 78
+    EXPR               go to state 79
+    METHOD_NAME        go to state 63
+    LOCATION           go to state 80
+    LITERAL            go to state 81
+    BOOL               go to state 82
+
+
+State 54
+
+   33 STATEMENT: BREAK . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 83
+
+
+State 55
+
+   34 STATEMENT: CONTINUE . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 84
+
+
+State 56
+
+   48 METHOD_CALL: CALLOUT . OPEN_PARANTHESIS STRING_CONST Call_Func_OutARGS CLOSE_PARANTHESIS
+
+    OPEN_PARANTHESIS  shift, and go to state 85
+
+
+State 57
+
+   25 BLOCK: OPEN_BRACE STATEMENTS CLOSE_BRACE .
+
+    $default  reduce using rule 25 (BLOCK)
+
+
+State 58
+
+   36 STATEMENT: FIELD_DECLARATION .
+
+    $default  reduce using rule 36 (STATEMENT)
+
+
+State 59
+
+   35 STATEMENT: BLOCK .
+
+    $default  reduce using rule 35 (STATEMENT)
+
+
+State 60
+
+   27 STATEMENTS: STATEMENTS STATEMENT .
+
+    $default  reduce using rule 27 (STATEMENTS)
+
+
+State 61
+
+   18 FIELD_DECLARATION: TYPE . VARIABLES SEMI_COLON
+
+    ID  shift, and go to state 32
+
+    VARIABLES  go to state 20
+    VARIABLE   go to state 21
+
+
+State 62
+
+   29 STATEMENT: METHOD_CALL . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 86
+
+
+State 63
+
+   47 METHOD_CALL: METHOD_NAME . OPEN_PARANTHESIS List_Arguments CLOSE_PARANTHESIS
+
+    OPEN_PARANTHESIS  shift, and go to state 87
+
+
+State 64
+
+   28 STATEMENT: LOCATION . Operator_Assign EXPR SEMI_COLON
+
+    TOK_EQUAL        shift, and go to state 88
+    TOK_PLUS_EQUAL   shift, and go to state 89
+    TOK_MINUS_EQUAL  shift, and go to state 90
+
+    Operator_Assign  go to state 91
+
+
+State 65
+
+   80 LOCATION: ID OPEN_SQR_BRACKET . EXPR CLOSE_SQR_BRACKET
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 92
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 66
+
+   30 STATEMENT: IF OPEN_PARANTHESIS . EXPR CLOSE_PARANTHESIS BLOCK ELSE_STMT
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 93
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 67
+
+   31 STATEMENT: FOR ID . TOK_EQUAL EXPR COMMA EXPR BLOCK
+
+    TOK_EQUAL  shift, and go to state 94
+
+
+State 68
+
+   81 LITERAL: INT_CONST .
+
+    $default  reduce using rule 81 (LITERAL)
+
+
+State 69
+
+   84 LITERAL: STRING_CONST .
+
+    $default  reduce using rule 84 (LITERAL)
+
+
+State 70
+
+   82 LITERAL: CHAR_CONST .
+
+    $default  reduce using rule 82 (LITERAL)
+
+
+State 71
+
+   86 BOOL: TRUE .
+
+    $default  reduce using rule 86 (BOOL)
+
+
+State 72
+
+   87 BOOL: FALSE .
+
+    $default  reduce using rule 87 (BOOL)
+
+
+State 73
+
+   85 LITERAL: HEX_CONST .
+
+    $default  reduce using rule 85 (LITERAL)
+
+
+State 74
+
+   71 EXPR: OPEN_PARANTHESIS . EXPR CLOSE_PARANTHESIS
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 95
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 75
+
+   69 EXPR: TOK_MINUS . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 96
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 76
+
+   70 EXPR: TOK_NOT . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 97
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 77
+
+   32 STATEMENT: RETURN Return_Expression . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 98
+
+
+State 78
+
+   54 EXPR: METHOD_CALL .
+
+    $default  reduce using rule 54 (EXPR)
+
+
+State 79
+
+   43 Return_Expression: EXPR .
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 43 (Return_Expression)
+
+
+State 80
+
+   53 EXPR: LOCATION .
+
+    $default  reduce using rule 53 (EXPR)
+
+
+State 81
+
+   55 EXPR: LITERAL .
+
+    $default  reduce using rule 55 (EXPR)
+
+
+State 82
+
+   83 LITERAL: BOOL .
+
+    $default  reduce using rule 83 (LITERAL)
+
+
+State 83
+
+   33 STATEMENT: BREAK SEMI_COLON .
+
+    $default  reduce using rule 33 (STATEMENT)
+
+
+State 84
+
+   34 STATEMENT: CONTINUE SEMI_COLON .
+
+    $default  reduce using rule 34 (STATEMENT)
+
+
+State 85
+
+   48 METHOD_CALL: CALLOUT OPEN_PARANTHESIS . STRING_CONST Call_Func_OutARGS CLOSE_PARANTHESIS
+
+    STRING_CONST  shift, and go to state 112
+
+
+State 86
+
+   29 STATEMENT: METHOD_CALL SEMI_COLON .
+
+    $default  reduce using rule 29 (STATEMENT)
+
+
+State 87
+
+   47 METHOD_CALL: METHOD_NAME OPEN_PARANTHESIS . List_Arguments CLOSE_PARANTHESIS
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    $default  reduce using rule 49 (List_Arguments)
+
+    METHOD_CALL     go to state 78
+    List_Arguments  go to state 113
+    COMMA_EXPR      go to state 114
+    EXPR            go to state 115
+    METHOD_NAME     go to state 63
+    LOCATION        go to state 80
+    LITERAL         go to state 81
+    BOOL            go to state 82
+
+
+State 88
+
+   44 Operator_Assign: TOK_EQUAL .
+
+    $default  reduce using rule 44 (Operator_Assign)
+
+
+State 89
+
+   45 Operator_Assign: TOK_PLUS_EQUAL .
+
+    $default  reduce using rule 45 (Operator_Assign)
+
+
+State 90
+
+   46 Operator_Assign: TOK_MINUS_EQUAL .
+
+    $default  reduce using rule 46 (Operator_Assign)
+
+
+State 91
+
+   28 STATEMENT: LOCATION Operator_Assign . EXPR SEMI_COLON
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 116
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 92
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+   80 LOCATION: ID OPEN_SQR_BRACKET EXPR . CLOSE_SQR_BRACKET
+
+    CLOSE_SQR_BRACKET  shift, and go to state 117
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+
+State 93
+
+   30 STATEMENT: IF OPEN_PARANTHESIS EXPR . CLOSE_PARANTHESIS BLOCK ELSE_STMT
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    CLOSE_PARANTHESIS  shift, and go to state 118
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+
+State 94
+
+   31 STATEMENT: FOR ID TOK_EQUAL . EXPR COMMA EXPR BLOCK
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 119
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 95
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+   71     | OPEN_PARANTHESIS EXPR . CLOSE_PARANTHESIS
+
+    CLOSE_PARANTHESIS  shift, and go to state 120
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+
+State 96
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+   69     | TOK_MINUS EXPR .
+
+    TOK_MODULUS   shift, and go to state 99
+    TOK_MULTIPLY  shift, and go to state 102
+    TOK_DIVIDE    shift, and go to state 103
+
+    $default  reduce using rule 69 (EXPR)
+
+
+State 97
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+   70     | TOK_NOT EXPR .
+
+    $default  reduce using rule 70 (EXPR)
+
+
+State 98
+
+   32 STATEMENT: RETURN Return_Expression SEMI_COLON .
+
+    $default  reduce using rule 32 (STATEMENT)
+
+
+State 99
+
+   60 EXPR: EXPR TOK_MODULUS . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 121
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 100
+
+   56 EXPR: EXPR TOK_PLUS . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 122
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 101
+
+   57 EXPR: EXPR TOK_MINUS . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 123
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 102
+
+   58 EXPR: EXPR TOK_MULTIPLY . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 124
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 103
+
+   59 EXPR: EXPR TOK_DIVIDE . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 125
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 104
+
+   66 EXPR: EXPR TOK_NOT_EQUAL . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 126
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 105
+
+   68 EXPR: EXPR TOK_OR . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 127
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 106
+
+   67 EXPR: EXPR TOK_AND . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 128
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 107
+
+   65 EXPR: EXPR TOK_EQUAL_EQUAL . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 129
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 108
+
+   64 EXPR: EXPR TOK_LESS_EQUAL . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 130
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 109
+
+   63 EXPR: EXPR TOK_LESS . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 131
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 110
+
+   62 EXPR: EXPR TOK_GREATER_EQUAL . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 132
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 111
+
+   61 EXPR: EXPR TOK_GREATER . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 133
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 112
+
+   48 METHOD_CALL: CALLOUT OPEN_PARANTHESIS STRING_CONST . Call_Func_OutARGS CLOSE_PARANTHESIS
+
+    COMMA  shift, and go to state 134
+
+    $default  reduce using rule 72 (Call_Func_OutARGS)
+
+    Call_Func_OutARGS  go to state 135
+    Call_Func_OutLIST  go to state 136
+
+
+State 113
+
+   47 METHOD_CALL: METHOD_NAME OPEN_PARANTHESIS List_Arguments . CLOSE_PARANTHESIS
+
+    CLOSE_PARANTHESIS  shift, and go to state 137
+
+
+State 114
+
+   50 List_Arguments: COMMA_EXPR .
+   52 COMMA_EXPR: COMMA_EXPR . COMMA EXPR
+
+    COMMA  shift, and go to state 138
+
+    $default  reduce using rule 50 (List_Arguments)
+
+
+State 115
+
+   51 COMMA_EXPR: EXPR .
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 51 (COMMA_EXPR)
+
+
+State 116
+
+   28 STATEMENT: LOCATION Operator_Assign EXPR . SEMI_COLON
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    SEMI_COLON         shift, and go to state 139
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+
+State 117
+
+   80 LOCATION: ID OPEN_SQR_BRACKET EXPR CLOSE_SQR_BRACKET .
+
+    $default  reduce using rule 80 (LOCATION)
+
+
+State 118
+
+   30 STATEMENT: IF OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS . BLOCK ELSE_STMT
+
+    OPEN_BRACE  shift, and go to state 45
+
+    BLOCK  go to state 140
+
+
+State 119
+
+   31 STATEMENT: FOR ID TOK_EQUAL EXPR . COMMA EXPR BLOCK
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    COMMA              shift, and go to state 141
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+
+State 120
+
+   71 EXPR: OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS .
+
+    $default  reduce using rule 71 (EXPR)
+
+
+State 121
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   60     | EXPR TOK_MODULUS EXPR .
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    $default  reduce using rule 60 (EXPR)
+
+
+State 122
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   56     | EXPR TOK_PLUS EXPR .
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS   shift, and go to state 99
+    TOK_MULTIPLY  shift, and go to state 102
+    TOK_DIVIDE    shift, and go to state 103
+
+    $default  reduce using rule 56 (EXPR)
+
+
+State 123
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   57     | EXPR TOK_MINUS EXPR .
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS   shift, and go to state 99
+    TOK_MULTIPLY  shift, and go to state 102
+    TOK_DIVIDE    shift, and go to state 103
+
+    $default  reduce using rule 57 (EXPR)
+
+
+State 124
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   58     | EXPR TOK_MULTIPLY EXPR .
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    $default  reduce using rule 58 (EXPR)
+
+
+State 125
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   59     | EXPR TOK_DIVIDE EXPR .
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    $default  reduce using rule 59 (EXPR)
+
+
+State 126
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   66     | EXPR TOK_NOT_EQUAL EXPR .
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 66 (EXPR)
+
+
+State 127
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+   68     | EXPR TOK_OR EXPR .
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 68 (EXPR)
+
+
+State 128
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   67     | EXPR TOK_AND EXPR .
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 67 (EXPR)
+
+
+State 129
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   65     | EXPR TOK_EQUAL_EQUAL EXPR .
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 65 (EXPR)
+
+
+State 130
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   64     | EXPR TOK_LESS_EQUAL EXPR .
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS   shift, and go to state 99
+    TOK_PLUS      shift, and go to state 100
+    TOK_MINUS     shift, and go to state 101
+    TOK_MULTIPLY  shift, and go to state 102
+    TOK_DIVIDE    shift, and go to state 103
+
+    TOK_LESS_EQUAL     error (nonassociative)
+    TOK_LESS           error (nonassociative)
+    TOK_GREATER_EQUAL  error (nonassociative)
+    TOK_GREATER        error (nonassociative)
+
+    $default  reduce using rule 64 (EXPR)
+
+
+State 131
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   63     | EXPR TOK_LESS EXPR .
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS   shift, and go to state 99
+    TOK_PLUS      shift, and go to state 100
+    TOK_MINUS     shift, and go to state 101
+    TOK_MULTIPLY  shift, and go to state 102
+    TOK_DIVIDE    shift, and go to state 103
+
+    TOK_LESS_EQUAL     error (nonassociative)
+    TOK_LESS           error (nonassociative)
+    TOK_GREATER_EQUAL  error (nonassociative)
+    TOK_GREATER        error (nonassociative)
+
+    $default  reduce using rule 63 (EXPR)
+
+
+State 132
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   62     | EXPR TOK_GREATER_EQUAL EXPR .
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS   shift, and go to state 99
+    TOK_PLUS      shift, and go to state 100
+    TOK_MINUS     shift, and go to state 101
+    TOK_MULTIPLY  shift, and go to state 102
+    TOK_DIVIDE    shift, and go to state 103
+
+    TOK_LESS_EQUAL     error (nonassociative)
+    TOK_LESS           error (nonassociative)
+    TOK_GREATER_EQUAL  error (nonassociative)
+    TOK_GREATER        error (nonassociative)
+
+    $default  reduce using rule 62 (EXPR)
+
+
+State 133
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   61     | EXPR TOK_GREATER EXPR .
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS   shift, and go to state 99
+    TOK_PLUS      shift, and go to state 100
+    TOK_MINUS     shift, and go to state 101
+    TOK_MULTIPLY  shift, and go to state 102
+    TOK_DIVIDE    shift, and go to state 103
+
+    TOK_LESS_EQUAL     error (nonassociative)
+    TOK_LESS           error (nonassociative)
+    TOK_GREATER_EQUAL  error (nonassociative)
+    TOK_GREATER        error (nonassociative)
+
+    $default  reduce using rule 61 (EXPR)
+
+
+State 134
+
+   74 Call_Func_OutLIST: COMMA . Call_Func_Out
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL    go to state 78
+    EXPR           go to state 142
+    Call_Func_Out  go to state 143
+    CALLOUT_ARG    go to state 144
+    METHOD_NAME    go to state 63
+    LOCATION       go to state 80
+    LITERAL        go to state 81
+    BOOL           go to state 82
+
+
+State 135
+
+   48 METHOD_CALL: CALLOUT OPEN_PARANTHESIS STRING_CONST Call_Func_OutARGS . CLOSE_PARANTHESIS
+
+    CLOSE_PARANTHESIS  shift, and go to state 145
+
+
+State 136
+
+   73 Call_Func_OutARGS: Call_Func_OutLIST .
+
+    $default  reduce using rule 73 (Call_Func_OutARGS)
+
+
+State 137
+
+   47 METHOD_CALL: METHOD_NAME OPEN_PARANTHESIS List_Arguments CLOSE_PARANTHESIS .
+
+    $default  reduce using rule 47 (METHOD_CALL)
+
+
+State 138
+
+   52 COMMA_EXPR: COMMA_EXPR COMMA . EXPR
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 146
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 139
+
+   28 STATEMENT: LOCATION Operator_Assign EXPR SEMI_COLON .
+
+    $default  reduce using rule 28 (STATEMENT)
+
+
+State 140
+
+   30 STATEMENT: IF OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS BLOCK . ELSE_STMT
+
+    ELSE  shift, and go to state 147
+
+    $default  reduce using rule 39 (ELSE_STMT)
+
+    ELSE_STMT   go to state 148
+    ELSE_BLOCK  go to state 149
+
+
+State 141
+
+   31 STATEMENT: FOR ID TOK_EQUAL EXPR COMMA . EXPR BLOCK
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL  go to state 78
+    EXPR         go to state 150
+    METHOD_NAME  go to state 63
+    LOCATION     go to state 80
+    LITERAL      go to state 81
+    BOOL         go to state 82
+
+
+State 142
+
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+   77 CALLOUT_ARG: EXPR .
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 77 (CALLOUT_ARG)
+
+
+State 143
+
+   74 Call_Func_OutLIST: COMMA Call_Func_Out .
+
+    $default  reduce using rule 74 (Call_Func_OutLIST)
+
+
+State 144
+
+   75 Call_Func_Out: CALLOUT_ARG . COMMA Call_Func_Out
+   76              | CALLOUT_ARG .
+
+    COMMA  shift, and go to state 151
+
+    $default  reduce using rule 76 (Call_Func_Out)
+
+
+State 145
+
+   48 METHOD_CALL: CALLOUT OPEN_PARANTHESIS STRING_CONST Call_Func_OutARGS CLOSE_PARANTHESIS .
+
+    $default  reduce using rule 48 (METHOD_CALL)
+
+
+State 146
+
+   52 COMMA_EXPR: COMMA_EXPR COMMA EXPR .
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    $default  reduce using rule 52 (COMMA_EXPR)
+
+
+State 147
+
+   41 ELSE_BLOCK: ELSE . BLOCK
+
+    OPEN_BRACE  shift, and go to state 45
+
+    BLOCK  go to state 152
+
+
+State 148
+
+   30 STATEMENT: IF OPEN_PARANTHESIS EXPR CLOSE_PARANTHESIS BLOCK ELSE_STMT .
+
+    $default  reduce using rule 30 (STATEMENT)
+
+
+State 149
+
+   40 ELSE_STMT: ELSE_BLOCK .
+
+    $default  reduce using rule 40 (ELSE_STMT)
+
+
+State 150
+
+   31 STATEMENT: FOR ID TOK_EQUAL EXPR COMMA EXPR . BLOCK
+   56 EXPR: EXPR . TOK_PLUS EXPR
+   57     | EXPR . TOK_MINUS EXPR
+   58     | EXPR . TOK_MULTIPLY EXPR
+   59     | EXPR . TOK_DIVIDE EXPR
+   60     | EXPR . TOK_MODULUS EXPR
+   61     | EXPR . TOK_GREATER EXPR
+   62     | EXPR . TOK_GREATER_EQUAL EXPR
+   63     | EXPR . TOK_LESS EXPR
+   64     | EXPR . TOK_LESS_EQUAL EXPR
+   65     | EXPR . TOK_EQUAL_EQUAL EXPR
+   66     | EXPR . TOK_NOT_EQUAL EXPR
+   67     | EXPR . TOK_AND EXPR
+   68     | EXPR . TOK_OR EXPR
+
+    OPEN_BRACE         shift, and go to state 45
+    TOK_MODULUS        shift, and go to state 99
+    TOK_PLUS           shift, and go to state 100
+    TOK_MINUS          shift, and go to state 101
+    TOK_MULTIPLY       shift, and go to state 102
+    TOK_DIVIDE         shift, and go to state 103
+    TOK_NOT_EQUAL      shift, and go to state 104
+    TOK_OR             shift, and go to state 105
+    TOK_AND            shift, and go to state 106
+    TOK_EQUAL_EQUAL    shift, and go to state 107
+    TOK_LESS_EQUAL     shift, and go to state 108
+    TOK_LESS           shift, and go to state 109
+    TOK_GREATER_EQUAL  shift, and go to state 110
+    TOK_GREATER        shift, and go to state 111
+
+    BLOCK  go to state 153
+
+
+State 151
+
+   75 Call_Func_Out: CALLOUT_ARG COMMA . Call_Func_Out
+
+    INT_CONST         shift, and go to state 68
+    STRING_CONST      shift, and go to state 69
+    CHAR_CONST        shift, and go to state 70
+    ID                shift, and go to state 50
+    TRUE              shift, and go to state 71
+    FALSE             shift, and go to state 72
+    HEX_CONST         shift, and go to state 73
+    CALLOUT           shift, and go to state 56
+    OPEN_PARANTHESIS  shift, and go to state 74
+    TOK_MINUS         shift, and go to state 75
+    TOK_NOT           shift, and go to state 76
+
+    METHOD_CALL    go to state 78
+    EXPR           go to state 142
+    Call_Func_Out  go to state 154
+    CALLOUT_ARG    go to state 144
+    METHOD_NAME    go to state 63
+    LOCATION       go to state 80
+    LITERAL        go to state 81
+    BOOL           go to state 82
+
+
+State 152
+
+   41 ELSE_BLOCK: ELSE BLOCK .
+
+    $default  reduce using rule 41 (ELSE_BLOCK)
+
+
+State 153
+
+   31 STATEMENT: FOR ID TOK_EQUAL EXPR COMMA EXPR BLOCK .
+
+    $default  reduce using rule 31 (STATEMENT)
+
+
+State 154
+
+   75 Call_Func_Out: CALLOUT_ARG COMMA Call_Func_Out .
+
+    $default  reduce using rule 75 (Call_Func_Out)

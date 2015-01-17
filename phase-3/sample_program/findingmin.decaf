@@ -1,0 +1,16 @@
+class Program
+{
+	int arr[100000];
+	int main()
+	{
+		int i,min;
+		min=arr[1];
+		for i=1,10
+		{
+			if(arr[i]<min)
+			{
+				min=arr[i];
+			}
+		}
+	}
+}
